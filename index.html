@@ -16,8 +16,59 @@
     <title>Punchy!</title>
     <script type="module" crossorigin src="./assets/index-BfRqCvg7.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-QMC66icL.css">
+    <link rel="stylesheet" href="./showcase.css" />
   </head>
   <body>
     <div id="root"></div>
+    <section class="project-showcase" id="project-showcase" aria-labelledby="project-showcase-title" hidden>
+      <header class="project-showcase__header">
+        <h2 id="project-showcase-title">Punchy! 사용법</h2>
+        <p id="project-showcase-description">사진을 불러와 원하는 모양으로 펀칭하고 PNG로 저장해보세요.</p>
+      </header>
+      <div class="project-showcase__images">
+        <img src="./previews/preview-ko-1.png" alt="사진을 원하는 모양으로 펀칭하는 Punchy! 소개" loading="lazy" decoding="async" />
+        <img src="./previews/preview-ko-2.png" alt="도형과 글자 모양으로 펀칭하는 Punchy! 소개" loading="lazy" decoding="async" />
+        <img src="./previews/preview-ko-3.png" alt="펀칭 이미지를 다른 앱에서 활용하는 Punchy! 소개" loading="lazy" decoding="async" />
+      </div>
+    </section>
+    <script>
+      (() => {
+        const root = document.getElementById('root');
+        const showcase = document.getElementById('project-showcase');
+        const title = document.getElementById('project-showcase-title');
+        const description = document.getElementById('project-showcase-description');
+        const copy = {
+          ko: ['Punchy! 사용법', '사진을 불러와 원하는 모양으로 펀칭하고 PNG로 저장해보세요.'],
+          en: ['How to use Punchy!', 'Load a photo, punch it into any shape you like, and save it as a PNG.'],
+          ja: ['Punchy! の使い方', '写真を読み込み、好きな形にパンチしてPNGで保存してみましょう。'],
+          zh: ['Punchy! 使用方法', '导入照片，将它裁成喜欢的形状并保存为 PNG。']
+        };
+
+        function applyShowcaseLanguage(value) {
+          const text = copy[value] || copy.ko;
+          title.textContent = text[0];
+          description.textContent = text[1];
+        }
+
+        let mountAttempts = 0;
+        function mountShowcase() {
+          const target = root.querySelector('.snap-promo') || root.querySelector('.site-footer');
+          if (!target) {
+            mountAttempts += 1;
+            if (mountAttempts < 120) requestAnimationFrame(mountShowcase);
+            return;
+          }
+          target.before(showcase);
+          showcase.hidden = false;
+          const language = root.querySelector('.language-picker select');
+          applyShowcaseLanguage(language ? language.value : 'ko');
+        }
+
+        root.addEventListener('change', event => {
+          if (event.target.matches('.language-picker select')) applyShowcaseLanguage(event.target.value);
+        });
+        requestAnimationFrame(mountShowcase);
+      })();
+    </script>
   </body>
 </html>
